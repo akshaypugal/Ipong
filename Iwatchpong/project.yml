@@ -1,0 +1,117 @@
+# WristPong - XcodeGen project definition.
+#
+# The .xcodeproj is generated, not committed. On a Mac:
+#     bash scripts/bootstrap.sh        # installs XcodeGen (Homebrew) and generates WristPong.xcodeproj
+#     open WristPong.xcodeproj
+#
+# Set your signing team and a unique bundle id once in Config/Local.xcconfig
+# (copy Config/Local.xcconfig.example). Everything else works out of the box.
+
+name: WristPong
+
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "16.0"
+    watchOS: "9.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  developmentLanguage: en
+  xcodeVersion: "15.0"
+
+configFiles:
+  Debug: Config/Base.xcconfig
+  Release: Config/Base.xcconfig
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+packages:
+  PongCore:
+    path: Packages/PongCore
+
+targets:
+  # ---------------------------------------------------------------- iPhone
+  WristPong:
+    type: application
+    platform: iOS
+    sources:
+      - path: iPhone
+    dependencies:
+      - package: PongCore
+      - target: WristPongWatch
+    entitlements:
+      path: iPhone/WristPong.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    info:
+      path: iPhone/Info.plist
+      properties:
+        CFBundleDisplayName: WristPong
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: true
+        ITSAppUsesNonExemptEncryption: false
+        NSHealthShareUsageDescription: WristPong opens the Watch app so your Apple Watch can act as the table tennis paddle.
+        NSHealthUpdateUsageDescription: WristPong opens the Watch app so your Apple Watch can act as the table tennis paddle.
+        NSMotionUsageDescription: WristPong uses motion data from your Apple Watch to detect your table tennis strokes.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID)
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+    scheme:
+      testTargets:
+        - WristPongTests
+
+  # ----------------------------------------------------------------- Watch
+  WristPongWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: Watch
+    dependencies:
+      - package: PongCore
+    entitlements:
+      path: Watch/WristPongWatch.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+    info:
+      path: Watch/Info.plist
+      properties:
+        CFBundleDisplayName: WristPong
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: $(APP_BUNDLE_ID)
+        WKRunsIndependentlyOfCompanionApp: false
+        WKBackgroundModes:
+          - workout-processing
+        NSHealthShareUsageDescription: WristPong runs a table tennis workout session so your Watch keeps tracking your strokes while your wrist moves.
+        NSHealthUpdateUsageDescription: WristPong runs a table tennis workout session so your Watch keeps tracking your strokes while your wrist moves.
+        NSMotionUsageDescription: WristPong reads your wrist motion to detect drives, loops, chops, smashes and the rest of your strokes.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).watchkitapp
+        TARGETED_DEVICE_FAMILY: "4"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  # ----------------------------------------------------------------- Tests
+  WristPongTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: iPhoneTests
+    dependencies:
+      - target: WristPong
+      - package: PongCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_BUNDLE_ID).tests

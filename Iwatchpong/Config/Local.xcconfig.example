@@ -1,0 +1,8 @@
+// Copy this file to Config/Local.xcconfig (it is git-ignored) and edit the values.
+// Then re-run bash scripts/bootstrap.sh (or `xcodegen generate`).
+
+// Must be globally unique, e.g. com.yourname.wristpong
+APP_BUNDLE_ID = com.yourname.wristpong
+
+// Optional: your Apple Developer Team id. You can also pick the team in Xcode instead.
+// DEVELOPMENT_TEAM = ABCDE12345

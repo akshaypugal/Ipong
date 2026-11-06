@@ -1,0 +1,10 @@
+// Shared build settings. Do not put personal settings here: use Local.xcconfig.
+
+// Unique bundle id for the iPhone app (the Watch app becomes <id>.watchkitapp).
+APP_BUNDLE_ID = com.example.wristpong
+
+// Your Apple Developer Team id (Xcode > Settings > Accounts > Team ID). Empty = pick it in Xcode.
+DEVELOPMENT_TEAM =
+
+// Optional personal overrides (git-ignored). The leading "?" makes the include optional.
+#include? "Local.xcconfig"
